@@ -5,27 +5,31 @@ from flask_migrate import Migrate                        # import library
 
 from models import db, TodoItem, Comment,User
 import click
+import os
 
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from flask_jwt_extended import JWTManager
 app = Flask(__name__)
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todos.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todos.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI') 
 
 
 
 db.init_app(app)
 migrate = Migrate(app, db) 
-app.config['JWT_SECRET_KEY'] = 'fdsjkfjioi2rjshr2345hrsh043j5oij5545'
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(app)
-todo_list = [
-    { "id": 1,
-      "title": 'Learn Flask',
-      "done": True },
-    { "id": 2,
-      "title": 'Build a Flask App',
-      "done": False },
-]
+
+
+# todo_list = [
+#     { "id": 1,
+#       "title": 'Learn Flask',
+#       "done": True },
+#     { "id": 2,
+#       "title": 'Build a Flask App',
+#       "done": False },
+# ]
 
 
 @app.route('/api/todos/', methods=['GET'])
